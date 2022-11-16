@@ -2,8 +2,6 @@
 #include <cstdlib>
 #include <algorithm>
 
-#include <iostream>
-
 #include "RingBuffer.h"
 
 namespace trbuf {
@@ -50,11 +48,67 @@ size_t RingBuffer::FindChOffset(char ch)
     return 0;
 }
 
-size_t RingBuffer::FindStrOffset(const std::string& str)
+void RingBuffer::get_nextarr(const std::string &pattern, std::vector<size_t>& next)
 {
-    size_t size {0};
-    // KMP
+    size_t i {1};
+    size_t mep {0}; // maximum equal prefix suffix
+    size_t size {pattern.size()};
+
+    next.push_back(0);
+    next.push_back(0);
+
+    while (i < size)
+    {
+        if (mep == 0 || pattern[i] == pattern[mep]) {
+            i++;
+            mep++;
+
+            if (pattern[i] != pattern[mep]) {
+                next.push_back(mep);
+            } else {
+                next.push_back(next[mep]);
+            }
+        } else {
+            mep = next[mep];
+        }
+    }
+}
+
+// KMP
+size_t RingBuffer::FindStrOffset(const std::string& pattern)
+{
+    size_t r{0}, p{0};
+    size_t ring_size {0};
+    size_t patt_size {0};
+    std::vector<size_t> next;
+
     std::lock_guard<std::mutex> lock(m_read_lock);
+
+    if (pattern.size() == 0 || UsedSize() == 0)
+        return 0;
+
+    r = m_out + 1;
+    p = 1;
+    ring_size = UsedSize();
+    patt_size = pattern.size();
+
+    get_nextarr(pattern, next);
+
+    while (r < ring_size && p < patt_size)
+    {
+        if ((p == 0) || (m_buffer.get()[r & (m_size-1)] == pattern[p])) {
+            p++;
+            r++;
+        } else {
+            p = next[p];
+        }
+    }
+
+    if (p >= patt_size) {
+        return (r - m_out);
+    } else {
+        return 0;
+    }
 }
 
 size_t RingBuffer::CopyFromRing(char *base, size_t len)

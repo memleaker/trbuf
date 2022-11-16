@@ -7,6 +7,7 @@
 #include <string>
 #include <list>
 #include <mutex>
+#include <vector>
 
 namespace trbuf {
 
@@ -22,7 +23,7 @@ public:
 
     // find
     size_t FindChOffset(char ch);
-    size_t FindStrOffset(const std::string& str);
+    size_t FindStrOffset(const std::string& pattern);
 
     inline bool   IsFull(void)   { return ((m_in - m_out) == m_size); }
     inline bool   IsEmpty(void)  { return (m_in == m_out); }
@@ -38,6 +39,7 @@ public:
     size_t CopyToRing(const char *base, size_t len);
 
 private:
+    void get_nextarr(const std::string &pattern, std::vector<size_t>& next);
     inline bool is_power_of_two(size_t size) { return (size != 0) && ((size & (size-1)) == 0); }
     size_t fls(size_t x);
     size_t roundup_pow_of_two(size_t size);
