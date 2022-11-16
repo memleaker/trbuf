@@ -53,17 +53,20 @@ int main(void)
 	std::cout << "Free: " << buf.FreeSize()	<< std::endl;
 	std::cout << "Isempty: " << buf.IsEmpty()	<< std::endl;
 	std::cout << "IsFull: " << buf.IsFull()	<< std::endl;
-	std::cout << "Find 'c'" << buf.FindChOffset('c') << std::endl;
+	std::cout << "Find 'c' " << buf.FindChOffset('c') << std::endl;
+	std::cout << "Find \"el\" " << buf.FindStrOffset("el") << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 
 	std::cout << "-----------------------------------" << std::endl;
 	std::cout << "Write:" << buf.CopyToRing("hello", 6) << std::endl;
+	std::cout << "WriteContent: hello" << std::endl;
 	std::cout << "Cap: " << buf.Capacity() << std::endl;
 	std::cout << "Used: " << buf.UsedSize()	<< std::endl;
 	std::cout << "Free: " << buf.FreeSize()	<< std::endl;
 	std::cout << "Isempty: " << buf.IsEmpty()	<< std::endl;
 	std::cout << "IsFull: " << buf.IsFull()	<< std::endl;
-	std::cout << "Find 'o'" << buf.FindChOffset('o') << std::endl;
+	std::cout << "Find 'o' " << buf.FindChOffset('o') << std::endl;
+	std::cout << "Find \"el\" " << buf.FindStrOffset("el") << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 
 	std::cout << "-----------------------------------" << std::endl;
@@ -74,7 +77,8 @@ int main(void)
 	std::cout << "Free: " << buf.FreeSize()	<< std::endl;
 	std::cout << "Isempty: " << buf.IsEmpty()	<< std::endl;
 	std::cout << "IsFull: " << buf.IsFull()	<< std::endl;
-	std::cout << "Find 'o'" << buf.FindChOffset('o') << std::endl;
+	std::cout << "Find 'o' " << buf.FindChOffset('o') << std::endl;
+	std::cout << "Find \"el\" " << buf.FindStrOffset("el") << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 
 	std::cout << "-----------------------------------" << std::endl;
@@ -85,17 +89,20 @@ int main(void)
 	std::cout << "Free: " << buf.FreeSize()	<< std::endl;
 	std::cout << "Isempty: " << buf.IsEmpty()	<< std::endl;
 	std::cout << "IsFull: " << buf.IsFull()	<< std::endl;
-	std::cout << "Find 'o'" << buf.FindChOffset('o') << std::endl;
+	std::cout << "Find 'o' " << buf.FindChOffset('o') << std::endl;
+	std::cout << "Find \"el\" " << buf.FindStrOffset("el") << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 
 	std::cout << "-----------------------------------" << std::endl;
 	std::cout << "Write:" << buf.CopyToRing(str3, sizeof(str3)) << std::endl;
+	std::cout << "Write Content: " << str3 << std::endl;
 	std::cout << "Cap: " << buf.Capacity() << std::endl;
 	std::cout << "Used: " << buf.UsedSize()	<< std::endl;
 	std::cout << "Free: " << buf.FreeSize()	<< std::endl;
 	std::cout << "Isempty: " << buf.IsEmpty()	<< std::endl;
 	std::cout << "IsFull: " << buf.IsFull()	<< std::endl;
-	std::cout << "Find 'q'" << buf.FindChOffset('q') << std::endl;
+	std::cout << "Find 'q' " << buf.FindChOffset('q') << std::endl;
+	std::cout << "Find \"werw\" " << buf.FindStrOffset("werw") << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 
 	std::cout << "-----------------------------------" << std::endl;
@@ -106,17 +113,20 @@ int main(void)
 	std::cout << "Free: " << buf.FreeSize()	<< std::endl;
 	std::cout << "Isempty: " << buf.IsEmpty()	<< std::endl;
 	std::cout << "IsFull: " << buf.IsFull()	<< std::endl;
-	std::cout << "Find 'q'" << buf.FindChOffset('q') << std::endl;
+	std::cout << "Find 'q' " << buf.FindChOffset('q') << std::endl;
+	std::cout << "Find \"werw\" " << buf.FindStrOffset("werw") << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 
 	std::cout << "-----------------------------------" << std::endl;
 	std::cout << "Write:" << buf.CopyToRing(str5, sizeof(str5)) << std::endl;
+	std::cout << "Write Content: " << str5 << std::endl;
 	std::cout << "Cap: " << buf.Capacity() << std::endl;
 	std::cout << "Used: " << buf.UsedSize()	<< std::endl;
 	std::cout << "Free: " << buf.FreeSize()	<< std::endl;
 	std::cout << "Isempty: " << buf.IsEmpty()	<< std::endl;
 	std::cout << "IsFull: " << buf.IsFull()	<< std::endl;
-	std::cout << "Find '2'" << buf.FindChOffset('2') << std::endl;
+	std::cout << "Find '2' " << buf.FindChOffset('2') << std::endl;
+	std::cout << "Find \"561234\" " << buf.FindStrOffset("561234") << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 
 	std::cout << "-----------------------------------" << std::endl;
@@ -127,7 +137,8 @@ int main(void)
 	std::cout << "Free: " << buf.FreeSize()	<< std::endl;
 	std::cout << "Isempty: " << buf.IsEmpty()	<< std::endl;
 	std::cout << "IsFull: " << buf.IsFull()	<< std::endl;
-	std::cout << "Find '2'" << buf.FindChOffset('2') << std::endl;
+	std::cout << "Find '2' " << buf.FindChOffset('2') << std::endl;
+	std::cout << "Find \"561234\" " << buf.FindStrOffset("561234") << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 
 	std::cout << "-----------------------------------" << std::endl;
