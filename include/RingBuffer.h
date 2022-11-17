@@ -21,21 +21,85 @@ public:
     RingBuffer(const RingBuffer&) = delete;
     void operator=(const RingBuffer &) = delete;
 
-    // find
+    /**
+	 * @param ch
+	 *  find character 'ch' from Trbuf.
+	 * @returns
+	 *  return offset+1 to the first occurrence of the character 'ch'.
+     *  if not found, return 0.
+	*/
     size_t FindChOffset(char ch);
+
+    /**
+	 * @param pattern
+	 *  find string 'pattern' from Trbuf.
+	 * @returns
+	 *  return offset+strlen(pattern) to the first occurrence of the string.
+     *  if not found, return 0.
+	*/
     size_t FindStrOffset(const std::string& pattern);
 
+    /**
+     * @return 
+     *  return RingBuffer is or not full.
+    */
     inline bool   IsFull(void)   { return ((m_in - m_out) == m_size); }
+
+    /**
+     * @return 
+     *  return RingBuffer is or not empty.
+    */
     inline bool   IsEmpty(void)  { return (m_in == m_out); }
+
+    /**
+     * @return 
+     *  return RingBuffer data size.
+    */
     inline size_t UsedSize(void) { return (m_in - m_out); }
+
+    /**
+     * @return 
+     *  return RingBuffer unused or free size.
+    */
     inline size_t FreeSize(void) { return ((m_size) - (m_in - m_out)); }
+
+    /**
+     * @return 
+     *  return RingBuffer capacity.
+    */
     inline size_t Capacity(void) { return m_size; }
 
-    // just copy, not change pointer.
+    /**
+     * just copy bytes to base, ringbuffer no change.
+     * @param base
+     *  copy bytes from ringbuffer to base.
+     * @param len
+     *  copy len bytes from ringbuffer to base.
+     * @return
+     *  return the number of bytes copied.
+    */
     size_t CopyFromRing(char *base, size_t len);
 
-    // copy and change in out pointer.
+    /**
+     * move bytes to base, ringbuffer will be change.
+     * @param base
+     *  move bytes from ringbuffer to base.
+     * @param len
+     *  move len bytes from ringbuffer to base.
+     * @return
+     *  return the number of bytes moved.
+    */
     size_t MoveFromRing(char *base, size_t len);
+
+    /**
+     * copy bytes from base to ringbuffer.
+     * @param base
+     *  copy bytes from base to ringbuffer.
+     * @param len
+     *  copy len bytes from base to ringbuffer.
+     * @return
+     *  return the number of bytes copied.
+    */
     size_t CopyToRing(const char *base, size_t len);
 
 private:

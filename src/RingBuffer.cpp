@@ -24,7 +24,7 @@ RingBuffer::RingBuffer(size_t size)
 
 size_t RingBuffer::FindChOffset(char ch)
 {
-    size_t rlen {0}; // rlen is int ? or size_t
+    size_t rlen {0};
     size_t outpos {0};
     void *ptr {nullptr};
 
@@ -37,12 +37,12 @@ size_t RingBuffer::FindChOffset(char ch)
     rlen = std::min(UsedSize(), m_size - outpos);
     ptr = std::memchr(m_buffer.get()+outpos, ch, rlen);
     if (ptr) {
-        return (static_cast<char*>(ptr) - (m_buffer.get()+outpos) + 1);
+        return (((char*)ptr) - (m_buffer.get()+outpos) + 1);
     }
 
     ptr = std::memchr(m_buffer.get(), ch, UsedSize() - rlen);
     if (ptr) {
-        return (static_cast<char*>(ptr) - m_buffer.get()) + rlen + 1;
+        return (((char*)ptr) - m_buffer.get()) + rlen + 1;
     }
 
     return 0;
