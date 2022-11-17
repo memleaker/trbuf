@@ -45,7 +45,8 @@ ssize_t Trbuf::ReadUtilCh(void *buf, char ch, int flag)
     size_t offset;
     std::lock_guard<std::mutex> lock(m_read_lock);
 
-    if (!(offset = m_buffer->FindChOffset(ch))) {
+    offset = m_buffer->FindChOffset(ch);
+    if (!offset) {
         return trbuf::ECHNFD;
     }
 
@@ -61,7 +62,8 @@ ssize_t Trbuf::ReadUtilStr(void *buf, const std::string& pattern, int flag)
     size_t offset;
     std::lock_guard<std::mutex> lock(m_read_lock);
 
-    if (!(offset = m_buffer->FindStrOffset(pattern))) {
+    offset = m_buffer->FindStrOffset(pattern);
+    if (!offset) {
         return trbuf::ESTNFD;
     }
 

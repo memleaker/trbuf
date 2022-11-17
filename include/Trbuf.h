@@ -7,6 +7,7 @@
 #include <memory>
 #include <tuple>
 #include <mutex>
+#include <climits>
 
 #include "RingBuffer.h"
 
@@ -34,7 +35,6 @@ class Trbuf
 {
 public:
 	Trbuf(size_t bufsize);
-	~Trbuf();
 
 	// delete
 	Trbuf() = delete;
@@ -136,7 +136,8 @@ public:
 
 	/**
 	 * @param tlv
-	 *  read sizeof(T) + sizeof(L) + tlv.length bytes from Trbuf to stru.
+	 *  read TLV from Trbuf to tlv.
+	 *  note: structure memory align.
 	 * @param flag
 	 *  if flag == O_COPY, Read() just copy bytes to buf, but Trbuf nochange.
 	 *  if flag == O_MOVE, Read() copy bytes to buf, and change Trbuf.
@@ -147,40 +148,41 @@ public:
 	 * 			  error EINARG: L or length is too long.
 	 *  On success, the number of bytes read is returned (>= 0).
 	*/
-	template<typename T, typename L, typename V> ssize_t ReadTLV(Tlv<T, L, V> &tlv, int flag = O_MOVE)
+	template<typename T, typename L, typename V> ssize_t ReadTLV(Tlv<T, L, V> *tlv, int flag = O_MOVE)
 	{
-		T type;
-		L length;
-		size_t n{0}, len{0};
+		size_t len{0};
+		size_t off {((char*)(&tlv->value)) - ((char*)tlv)};
+		std::unique_ptr<char[]> tl = std::make_unique<char[]>(off);
 
 		std::lock_guard<std::mutex> lock(m_read_lock);
 
-		if (sizeof(T) + sizeof(L) > m_buffer->UsedSize()) {
+		/* Have enough data to fill type and length */
+		if (off > m_buffer->UsedSize()) {
 			return trbuf::ENOEOU;
 		}
 
-		m_buffer->CopyFromRing((char*)&type, sizeof(T));
-		m_buffer->CopyFromRing((char*)&length, sizeof(L));
-		
-		len = static_cast<size_t>(length);
-		if (len > m_buffer->UsedSize()) {
-			return trbuf::ENOEOU;
-		}
+		/* copy data to type and length */
+		m_buffer->CopyFromRing(tl.get(), off);
 
+		/* calculate value size */
+		len = static_cast<size_t>(((decltype(tlv))tl.get())->length);
+		len = std::max(len, sizeof(*tlv) - off);  /* some align bytes after value */
+
+		/* len is too big */
 		if (len > SSIZE_MAX) {
 			return trbuf::EINARG;
 		}
 
+		/* have enough to fill value */
+		if (len > m_buffer->UsedSize()) {
+			return trbuf::ENOEOU;
+		}
+
+		/* copy or move totlen to tlv */
 		if (flag == O_COPY) {
-			n += m_buffer->CopyFromRing((char*)&tlv.type, sizeof(T));
-			n += m_buffer->CopyFromRing((char*)&tlv.length, sizeof(L));
-			n += m_buffer->CopyFromRing((char*)&tlv.value, len);
-			return n;
+			return m_buffer->CopyFromRing((char*)tlv, off + len);
 		} else {
-			n += m_buffer->MoveFromRing((char*)&tlv.type, sizeof(T));
-			n += m_buffer->MoveFromRing((char*)&tlv.length, sizeof(L));
-			n += m_buffer->MoveFromRing((char*)&tlv.value, len);
-			return n;
+			return m_buffer->MoveFromRing((char*)tlv, off + len);
 		}
 	}
 
