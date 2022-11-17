@@ -11,15 +11,10 @@ RingBuffer::RingBuffer(size_t size)
         size = roundup_pow_of_two(size);
     }
 
-    try {
-        m_in = 0;
-        m_out = 0;
-        m_size = size;
-	    m_buffer = std::make_unique<char[]>(size);
-    } catch(std::bad_alloc &e) {
-        m_size = 0;
-        throw e;
-    }
+    m_in = 0;
+    m_out = 0;
+    m_size = size;
+    m_buffer = std::make_unique<char[]>(size);
 }
 
 size_t RingBuffer::FindChOffset(char ch)
