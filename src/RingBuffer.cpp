@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <algorithm>
 
+#include <iostream>
+
 #include "RingBuffer.h"
 
 namespace trbuf {
@@ -82,24 +84,27 @@ size_t RingBuffer::FindStrOffset(const std::string& pattern)
     if (pattern.size() == 0 || UsedSize() == 0)
         return 0;
 
-    r = m_out + 1;
-    p = 1;
-    ring_size = UsedSize();
+    r = m_out;
+    p = 0;
+    ring_size = UsedSize() + m_out;
     patt_size = pattern.size();
 
     get_nextarr(pattern, next);
 
     while (r < ring_size && p < patt_size)
     {
+        /* if matched, index all increment */
         if ((p == 0) || (m_buffer.get()[r & (m_size-1)] == pattern[p])) {
             p++;
             r++;
         } else {
+            /* not match, update p */
             p = next[p];
         }
     }
 
-    if (p >= patt_size) {
+    /* match whole pattern */
+    if (p == patt_size) {
         return (r - m_out);
     } else {
         return 0;
